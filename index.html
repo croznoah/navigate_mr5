@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <title>Navigate MR5</title>
+
+        <script src='https://unpkg.com/panzoom@8.7.3/dist/panzoom.min.js'></script>
+    </head>
+    <body>
+        <style>
+            :root {
+                --accentbg: dodgerblue;
+            }
+            * {
+                -webkit-tap-highlight-color: transparent;
+                font-family: "figtree", Arial, Helvetica, sans-serif;
+                box-sizing: border-box;
+            }
+            body {
+                background-color: white;
+                overflow: hidden;
+                margin: 0px;
+                display: flex;
+            }
+            .floor {
+                outline: none !important;
+                height: 100dvh;
+                width: 100dvw;
+                margin: auto;
+            }
+            .floor > * {
+                stroke: rgb(150, 150, 150);
+            }
+            foreignObject {
+                position: relative;
+            }
+            .label-icon {
+                height: 16px;
+                width: 16px;
+            }
+            .label {
+                padding: 4px;
+                position: absolute;
+            }
+            .label > * {
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 13px;
+                text-align: center;
+                color: black;
+                font-weight: 500;
+                text-shadow: 0.5px 0.5px 0.5px rgba(127, 127, 127, 0.6);
+            }
+            .classroom {
+                fill: red;
+                background-color: red;
+            }
+            .lobby {
+                fill: grey;
+                background-color: grey;
+            }
+            .office {
+                fill: royalblue;
+                background-color: royalblue;
+            }
+            .elevator {
+                fill: orange;
+                background-color: orange;
+            }
+            .stairs {
+                fill: yellow;
+                background-color: yellow;
+            }
+            .bathroom {
+                fill: green;
+                background-color: green;
+            }
+            .lab {
+                fill: purple;
+                background-color: purple;
+            }
+            .floating-navigation {
+                position: fixed;
+                width: calc(100dvw - 32px);
+                max-width: 600px;
+                left: 50%;
+                transform: translateX(-50%);
+                top: 16px;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                align-items: center;
+            }
+            .floating-navigation .button {
+                box-shadow: rgba(127, 127, 127, 0.14) 0px 0px 12px;
+            }
+            .button {
+                height: 46px;
+                border-radius: 40px;
+                padding: 0px 26px;
+                width: fit-content;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                column-gap: 6px;
+                font-size: 16px;
+                font-weight: 600;
+                color: black;
+                cursor: pointer;
+                background-color: white;
+            }
+            .button:hover {
+                background-color: hsl(0, 0%, 97%);
+            }
+            .button > div {
+                font-size: 16px;
+                font-weight: 500;
+            }
+            .button > svg {
+                height: 20px;
+                width: 20px;
+            }
+            .button.cir {
+                width: 46px;
+                padding: 0px;
+                place-items: center;
+                column-gap: 0px;
+            }
+            .search-window {
+                display: flex;
+                flex-direction: column;
+                row-gap: 10px;
+                z-index: 999;
+                padding: 16px;
+                position: fixed;
+                left: 0px;
+                top: 0px;
+                box-shadow: rgba(127, 127, 127, 0.14) 0px 0px 12px;
+                transform: translateY(calc(100% + 20px));
+                height: 100dvh;
+                width: 100dvw;
+                max-width: 500px;
+                outline: 1px solid #e4e4e4;
+                background-color: white;
+                transition: 0.24s ease transform;
+                overflow-y: auto;
+            }
+            .search-window[active="true"] {
+                transform: translateY(0px);
+            }
+            .back-btn {
+                position: sticky;
+                bottom: 0px;
+                margin: 0px auto;
+                margin-top: auto;
+                height: 46px;
+                flex: none;
+                display: flex;
+                align-items: center;
+                padding: 0px 56px;
+                background-color: var(--accentbg);
+                color: white;
+                font-weight: 600;
+                border-radius: 40px;
+                cursor: pointer;
+            }
+            .search-wrapper {
+                position: relative;
+                width: 100%;
+            }
+            .search-wrapper > svg {
+                position: absolute;
+                right: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: black;
+                height: 18px;
+                width: 18px;
+            }
+            .search-bar {
+                font-size: 16px;
+                box-shadow: rgba(127, 127, 127, 0.14) 0px 0px 12px;
+                background-color: white;
+                border: none;
+                outline: 1px solid transparent;
+                color: black;
+                height: 46px;
+                padding: 0px 20px;
+                border-radius: 40px;
+                width: 100%;
+            }
+            .search-bar::placeholder {
+                color: black;
+                font-weight: 500;
+            }
+            .search-bar:focus {
+                outline: 2px solid dodgerblue;
+            }
+            .chip-wrapper {
+                flex: none;
+                display: flex;
+                max-width: 100%;
+                overflow-x: auto;
+                column-gap: 6px;
+            }
+            .chip {
+                flex: none;
+                height: 28px;
+                padding: 0px 14px;
+                background-color: hsl(0, 0%, 97%);
+                font-size: 14px;
+                color: black;
+                font-weight: 500;
+                width: fit-content;
+                border-radius: 40px;
+                display: flex;
+                align-items: center;
+                white-space: nowrap;
+                transition: 0.24s ease background-color, 0.24s ease color;
+                cursor: pointer;
+            }
+            .chip[active="true"] {
+                background-color: var(--accentbg);
+                color: white;
+            }
+            .search-results {
+                display: flex;
+                flex-direction: column;
+                row-gap: 10px;
+            }
+            .nothing {
+                text-align: center;
+                padding: 50px 0px;
+                font-weight: 500;
+            }
+            .result {
+                flex: none;
+                overflow: hidden;
+                display: grid;
+                grid-template-columns: auto 1fr auto;
+                align-items: center;
+                border-radius: 9px;
+                box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 12px;
+                cursor: pointer;
+            }
+            .result:hover {
+                background-color: hsl(0, 0%, 97%);
+            }
+            .room-number {
+                font-size: 17px;
+                display: grid;
+                font-weight: 600;
+                color: black;
+                place-items: center;
+                height: 80px;
+                width: 80px;
+                position: relative;
+                z-index: 9;
+            }
+            .number-fill {
+                left: 0px;
+                top: 0px;
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                opacity: 0.3;
+                z-index: -1;
+            }
+            .result-title {
+                padding: 6px 12px;
+                font-weight: 500;
+            }
+            .go {
+                height: 20px;
+                width: 20px;
+                color: #242424;
+                margin-right: 24px;
+            }
+        </style>
+
+        <svg id="floor-2" class="floor" viewBox="0 0 668 967" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <path id="classroom-0" d="M6 5.5H5.5V6V164V164.5H6H86H86.5V164V6V5.5H86H6Z" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lobby-0" x="86.5" y="124.5" width="163" height="91" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <path id="office-0" d="M169 5.5H168.5V6V97.1981V97.6981H169H204.5V124.112V124.612H205H249.5V159V159.5H250H277H277.5V159V82.5H352H352.5V82V6V5.5H352H169Z" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="classroom-1" x="277.5" y="82.5" width="75" height="69" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="elevator-2" x="168.5" y="97.5" width="36" height="27" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="stairs-2" x="86.5" y="32.5" width="44" height="92" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="bathroom-0" x="352.5" y="27.5" width="91" height="85" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="stairs-0" x="352.5" y="112.5" width="55" height="47" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="elevator-0" x="392.5" y="195.5" width="45" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="elevator-1" x="403.5" y="924.5" width="45" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="stairs-1" x="481.5" y="924.5" width="79" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="bathroom-1" x="560.5" y="924.5" width="54" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-1" x="488.5" y="5.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-2" x="528.5" y="5.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <path id="lab-0" d="M444 5.5H443.5V6V112V112.5H444H528H528.5V112V76V75.5H528H488.5V6V5.5H488H444Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+                <path id="lab-2" d="M317 195.5H316.5V196V307V307.5H317H437H437.5V307V233V232.5H437H392.5V196V195.5H392H317Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+                <path id="lab-1" d="M614 5.5H614.5V6V112V112.5H614H529H528.5V112V41V40.5H529H568.452V6V5.5H568.952H614Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+                <rect id="office-3" x="488.5" y="40.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="classroom-2" x="478.5" y="112.5" width="110" height="44" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-3" x="316.5" y="307.5" width="121" height="74" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-4" x="316.5" y="381.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-5" x="316.5" y="456.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-6" x="316.5" y="531.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-7" x="316.5" y="604.5" width="121" height="76" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-8" x="316.5" y="680.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-9" x="316.5" y="753.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-10" x="316.5" y="828.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-11" x="493.5" y="306.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-12" x="493.5" y="381.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-13" x="493.5" y="456.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-14" x="493.5" y="531.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-15" x="493.5" y="604.5" width="121" height="76" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-16" x="493.5" y="680.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-17" x="493.5" y="753.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-18" x="493.5" y="828.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="lab-19" x="493.5" y="267.5" width="121" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-4" x="614.5" y="381.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-5" x="614.5" y="418.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-6" x="614.5" y="456.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-7" x="614.5" y="493.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-8" x="614.5" y="531.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-9" x="614.5" y="565.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-10" x="614.5" y="604.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-11" x="614.5" y="641.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-12" x="614.5" y="680.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-13" x="614.5" y="714.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-14" x="614.5" y="753.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-15" x="614.5" y="787.5" width="48" height="41" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-16" x="268.5" y="381.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-17" x="268.5" y="418.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-18" x="268.5" y="456.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-19" x="268.5" y="493.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-20" x="268.5" y="531.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-21" x="268.5" y="565.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-22" x="268.5" y="604.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-23" x="268.5" y="641.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-24" x="268.5" y="680.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-25" x="268.5" y="714.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-26" x="268.5" y="753.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+                <rect id="office-27" x="268.5" y="787.5" width="48" height="41" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+            </g>
+        </svg>
+
+        <div class="floating-navigation">
+            <div class="button" style="border-right: 1px solid #e4e4e4;">
+                <div>Floor</div>
+                <div class="floor-nav">1</div>
+                <div class="floor-nav">2</div>
+            </div>
+            <div></div>
+            <div class="button cir" onclick="search_window('open')">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+        </div>
+
+        <div class="search-window">
+            <div class="search-wrapper">
+                <input class="search-bar" onkeyup="filter_map(this.value)" placeholder="Search">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-search"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            </div>
+
+            <div class="chip-wrapper">
+                <div class="chip" sort="all" onclick="toggle_chip(this)" active="true">
+                    All
+                </div>
+                <div class="chip" sort="lab" onclick="toggle_chip(this)">
+                    Lab
+                </div>
+                <div class="chip" sort="office" onclick="toggle_chip(this)">
+                    Office
+                </div>
+                <div class="chip" sort="classroom" onclick="toggle_chip(this)">
+                    Classroom
+                </div>
+                <div class="chip" sort="bathroom" onclick="toggle_chip(this)">
+                    Bathroom
+                </div>
+                <div class="chip" sort="stairs" onclick="toggle_chip(this)">
+                    Stairs
+                </div>
+                <div class="chip" sort="elevator" onclick="toggle_chip(this)">
+                    Elevator
+                </div>
+            </div>
+
+            <div class="search-results">
+                <div class="result">
+                    <div class="room-number">
+                        2041A
+                    </div>
+                    <div class="result-title">
+                        Meyer's Lab
+                    </div>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                </div>
+            </div>
+
+            <div class="back-btn" onclick="search_window('close')">
+                Close
+            </div>
+        </div>
+
+        <script>
+            map_details = {
+                "2": {
+                    "lab": {
+                        "0": {
+                            "name": "Lab",
+                            "number": "2041",
+                            "professor": "Papin",
+                        },
+                        "1": {
+                            "name": "Lab",
+                            "number": "2051",
+                            "professor": "Meyer",
+                        },
+                        "2": {
+                            "name": "Shared Lab Space",
+                            "number": "2300",
+                            "professor": null,
+                        },
+                        "3": {
+                            "name": "Lab",
+                            "number": "2208",
+                            "professor": "Pipin",
+                        },
+                        "4": {
+                            "name": "Lab",
+                            "number": "2214",
+                            "professor": "Price",
+                        },
+                        "5": {
+                            "name": "Lab",
+                            "number": "2216",
+                            "professor": "Price",
+                        },
+                        "6": {
+                            "name": "Lab",
+                            "number": "2220",
+                            "professor": "Zunder",
+                        },
+                        "7": {
+                            "name": "Lab",
+                            "number": "2226",
+                            "professor": "Barker",
+                        },
+                        "8": {
+                            "name": "Lab",
+                            "number": "2228",
+                            "professor": "Peirce-Cottler",
+                        },
+                        "9": {
+                            "name": "Lab",
+                            "number": "2232",
+                            "professor": "Lazzara",
+                        },
+                        "10": {
+                            "name": "Lab",
+                            "number": "2238",
+                            "professor": "Lazzara",
+                        },
+                        "11": {
+                            "name": "Lab",
+                            "number": "2207",
+                            "professor": "Peirce-Cottler",
+                        },
+                        "12": {
+                            "name": "Lab",
+                            "number": "2213",
+                            "professor": "Saucerman",
+                        },
+                        "13": {
+                            "name": "Lab",
+                            "number": "2215",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "14": {
+                            "name": "Lab",
+                            "number": "2219",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "15": {
+                            "name": "Lab",
+                            "number": "2225",
+                            "professor": "Jane",
+                        },
+                        "16": {
+                            "name": "Lab",
+                            "number": "2229",
+                            "professor": "Jane",
+                        },
+                        "17": {
+                            "name": "Lab",
+                            "number": "2231",
+                            "professor": "Blemker",
+                        },
+                        "18": {
+                            "name": "Lab",
+                            "number": "2237",
+                            "professor": "Epstein",
+                        },
+                        "19": {
+                            "name": "Lab",
+                            "number": "2205",
+                            "professor": "Peirce-Cottler",
+                        }
+                    },
+                    "office": {
+                        "icon": `<svg xmlns="http://www.w3.org/2000/svg" class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-presentation"><path d="M2 3h20"/><path d="M21 3v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V3"/><path d="m7 21 5-5 5 5"/></svg>`,
+                        "0": {
+                            "name": "BME Dept. Offices",
+                            "number": "2010",
+                            "professor": null,
+                        },
+                        "1": {
+                            "name": "Office",
+                            "number": "2041B",
+                            "professor": "Papin",
+                        },
+                        "2": {
+                            "name": "Office",
+                            "number": "2051B",
+                            "professor": "Meyer",
+                        },
+                        "3": {
+                            "name": "Student Office",
+                            "number": "2041A",
+                            "professor": "Meyer",
+                        },
+                        "4": {
+                            "name": "Office",
+                            "number": "2111",
+                            "professor": "Saucerman",
+                        },
+                        "5": {
+                            "name": "Student Office",
+                            "number": "2113",
+                            "professor": "Saucerman",
+                        },
+                        "6": {
+                            "name": "Office",
+                            "number": "2115",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "7": {
+                            "name": "Student Office",
+                            "number": "2117",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "8": {
+                            "name": "Student Office",
+                            "number": "2119",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "9": {
+                            "name": "Office",
+                            "number": "2121",
+                            "professor": "Fallahi-Sachini",
+                        },
+                        "10": {
+                            "name": "Office",
+                            "number": "2123",
+                            "professor": "Jane",
+                        },
+                        "11": {
+                            "name": "Student Office",
+                            "number": "2125",
+                            "professor": "Jane",
+                        },
+                        "12": {
+                            "name": "Student Office",
+                            "number": "2127",
+                            "professor": "Jane",
+                        },
+                        "13": {
+                            "name": "Office",
+                            "number": "2129",
+                            "professor": "Jane",
+                        },
+                        "14": {
+                            "name": "Office",
+                            "number": "2131",
+                            "professor": "Blemker",
+                        },
+                        "15": {
+                            "name": "Student Office",
+                            "number": "2133",
+                            "professor": "Blemker",
+                        },
+                        "16": {
+                            "name": "Office",
+                            "number": "2312",
+                            "professor": "Price",
+                        },
+                        "17": {
+                            "name": "Student Office",
+                            "number": "2314",
+                            "professor": "Price",
+                        },
+                        "18": {
+                            "name": "Office",
+                            "number": "2316",
+                            "professor": "Price",
+                        },
+                        "19": {
+                            "name": "Student Office",
+                            "number": "2318",
+                            "professor": "Price",
+                        },
+                        "20": {
+                            "name": "Student Office",
+                            "number": "2320",
+                            "professor": "Zunder",
+                        },
+                        "21": {
+                            "name": "Office",
+                            "number": "2322",
+                            "professor": "Zunder",
+                        },
+                        "22": {
+                            "name": "Office",
+                            "number": "2324",
+                            "professor": "Barker",
+                        },
+                        "23": {
+                            "name": "Student Office",
+                            "number": "2326",
+                            "professor": "Barker",
+                        },
+                        "24": {
+                            "name": "Student Office",
+                            "number": "2328",
+                            "professor": "Peirce-Cottler",
+                        },
+                        "25": {
+                            "name": "Office",
+                            "number": "2330",
+                            "professor": "Peirce-Cottler",
+                        },
+                        "26": {
+                            "name": "Student Office",
+                            "number": "2332",
+                            "professor": "Lazzara",
+                        },
+                        "27": {
+                            "name": "Office",
+                            "number": "2334",
+                            "professor": "Lazzara",
+                        }
+                    },
+                    "classroom": {
+                        "0": {
+                            "name": "BME Small Classroom",
+                            "number": "2005",
+                            "professor": null,
+                        },
+                        "1": {
+                            "name": "Library Meeting",
+                            "number": "2019",
+                            "professor": null,
+                        },
+                        "2": {
+                            "name": "Bioinstrumentation",
+                            "number": "2042",
+                            "professor": null,
+                        }
+                    },
+                    "stairs": {
+                        "icon": `<svg xmlns="http://www.w3.org/2000/svg" class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-square-activity"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-2-10-2 5H7"/></svg>`,
+                        "name": "Stairs",
+                        "number": null,
+                        "professor": null,
+                    },
+                    "bathroom": {
+                        "icon": `<svg xmlns="http://www.w3.org/2000/svg" class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-toilet"><path d="M7 12h13a1 1 0 0 1 1 1 5 5 0 0 1-5 5h-.598a.5.5 0 0 0-.424.765l1.544 2.47a.5.5 0 0 1-.424.765H5.402a.5.5 0 0 1-.424-.765L7 18"/><path d="M8 18a5 5 0 0 1-5-5V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v8"/></svg>`,
+                        "name": "Bathroom",
+                        "number": null,
+                        "professor": null,
+                    },
+                    "elevator": {
+                        "icon": `<svg xmlns="http://www.w3.org/2000/svg" class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-separator-horizontal"><line x1="3" x2="21" y1="12" y2="12"/><polyline points="8 8 12 4 16 8"/><polyline points="16 16 12 20 8 16"/></svg>`,
+                        "name": "Elevator",
+                        "number": null,
+                        "professor": null,
+                    },
+                    "lobby": {
+                        "icon": `<svg xmlns="http://www.w3.org/2000/svg" class="label-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-monitor-dot"><circle cx="19" cy="6" r="3"/><path d="M22 12v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/><path d="M12 17v4"/><path d="M8 21h8"/></svg>`,
+                        "name": "Lobby",
+                        "number": null,
+                        "professor": null,
+                    }
+                }
+            }
+            function init_maps() {
+                document.querySelectorAll(".floor").forEach(map => {
+                    var floor_number = map.getAttribute("id").replace(/[^0-9]/g, "");
+                    var view_box = map.getAttribute("viewBox").split(" ");
+                    var map_width = view_box[2];
+                    var map_height = view_box[3];
+
+                    var foreign = document.createElementNS("http://www.w3.org/2000/svg", "foreignObject");
+                    foreign.setAttribute("width", map_width);
+                    foreign.setAttribute("height", map_height);
+                    map.querySelector("g").appendChild(foreign);
+                    map.querySelector("g").querySelectorAll(":scope > *:not(foreignObject)").forEach(building => {
+                        var id = building.getAttribute("id");
+                        var id_number = id.replace(/[^0-9]/g, "");
+                        var class_name = id.substring(0, id.indexOf("-"));
+                        building.setAttribute("class", class_name);
+                        building.setAttribute("fill-opacity", "0.12");
+
+                        if (map_details[floor_number][class_name]) {
+                            if (map_details[floor_number][class_name][id_number]) {
+                                var details = map_details[floor_number][class_name][id_number];
+                            } else {
+                                var details = map_details[floor_number][class_name];
+                            }
+
+                            var name = details["name"];
+                            if (name == "Office" && details["professor"] != null) {
+                                var name = details["professor"] + "'s Office";
+                            } else if (name == "Lab" && details["professor"] != null) {
+                                var name = details["professor"] + "'s Lab";
+                            }
+
+                            var building_box = building.getBBox();
+                            var label = document.createElement("DIV");
+                            label.style.left = building_box["x"] + "px";
+                            label.style.top = building_box["y"] + "px";
+                            label.style.width = building_box["width"] + "px";
+                            label.style.height = building_box["height"] + "px";
+                            label.setAttribute("class", "label");
+
+                            if (map_details[floor_number][class_name]["icon"]) {
+                                label.innerHTML = map_details[floor_number][class_name]["icon"];
+                            } else {
+                                label.innerHTML = `<span>${name}</span>`;
+                            }
+
+                            foreign.appendChild(label);
+                        }
+                    })
+
+                    panzoom(map.querySelector("g"));
+
+                })
+            }
+            function filter_map(input) {
+                var results = [];
+                for (floor in map_details) {
+                    for (type in map_details[floor]) {
+                        var loop_keywords = ["lab", "office", "classroom"];
+                        if (loop_keywords.indexOf(type) != -1) {
+                            for (building in map_details[floor][type]) {
+                                if (building != "icon") {
+                                    var details = map_details[floor][type][building];
+                                    if (filter_details(details, input)) {
+                                        details["type"] = type;
+                                        results.push(details);
+                                    }
+                                }
+                            }
+                        } else {
+                            var details = map_details[floor][type];
+                            if (filter_details(details, input)) {
+                                details["type"] = type;
+                                results.push(details);
+                            }
+                        }
+                    }
+                }
+
+                print_results(results);
+            }
+            function filter_details(dict, input) {
+                var input = input.replace(/[^a-zA-Z0-9\s]/g, "").toLowerCase().trim();
+                for (key in dict) {
+                    if (dict[key] != null) {
+                        var value = dict[key].replace(/[^a-zA-Z0-9\s]/g, "").toLowerCase().trim();
+                        if (value.includes(input) || input.includes(value)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            function print_results(array) {
+                var wrapper = document.querySelector(".search-results");
+
+                if (array.length > 0) {
+                    wrapper.innerHTML = "";
+                    var active_chip = document.querySelector(".chip[active='true']").getAttribute("sort");
+
+                    for (index in array) {
+                        var result = array[index];
+                        if (result["icon"]) {
+                            var number = result["icon"];
+                        } else {
+                            var number = result["number"];
+                        }
+                        var name = result["name"];
+                        if (name == "Office" && result["professor"] != null) {
+                            var name = result["professor"] + "'s Office";
+                        } else if (name == "Lab" && result["professor"] != null) {
+                            var name = result["professor"] + "'s Lab";
+                        }
+
+                        var result_div = document.createElement("DIV");
+                        if (active_chip.includes(result["type"]) == false && active_chip != "all") {
+                            result_div.style.display = "none";
+                        }
+                        result_div.setAttribute("class", "result " + result["type"] + "-result");
+                        result_div.innerHTML = `
+                            <div class="room-number">
+                                <div class="number-fill ${result["type"]}"></div>
+                                ${number}
+                            </div>
+                            <div class="result-title">
+                                ${name}
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" class="go" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-chevron-right"><path d="m9 18 6-6-6-6"/></svg>
+                        `;
+                        wrapper.appendChild(result_div);
+                    }
+                } else {
+                    wrapper.innerHTML = `
+                        <div class="nothing">No Results</div>
+                    `;
+                }
+            }
+            init_maps();
+            filter_map("");
+            function toggle_chip(element) {
+                document.querySelector(".chip-wrapper").querySelectorAll(".chip").forEach(div => {
+                    if (div == element) {
+                        div.setAttribute("active", "true");
+                        div.scrollIntoView({ behavior: "smooth", block: "end", inline: "center" });
+                    } else {
+                        div.setAttribute("active", "false");
+                    }
+                })
+
+                filter_map(document.querySelector(".search-bar").value);
+            }
+            function search_window(action) {
+                var boolean_translate = ["close", "open"];
+                document.querySelector(".search-window").setAttribute("active", Boolean(boolean_translate.indexOf(action)));
+                if (action == "open") {
+                    document.querySelector(".search-bar").value = "";
+                    filter_map("");
+                }
+            }
+        </script>
+    </body>
+</html>
