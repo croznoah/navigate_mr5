@@ -1,0 +1,65 @@
+<svg width="668" height="967" viewBox="0 0 668 967" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Floor 2">
+<rect x="2.5" y="2.5" width="663" height="962" stroke="#43FF2E" stroke-width="5"/>
+<path id="classroom-0" d="M6 5.5H5.5V6V164V164.5H6H86H86.5V164V6V5.5H86H6Z" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lobby-0" x="86.5" y="124.5" width="163" height="91" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<path id="office-0" d="M169 5.5H168.5V6V97.1981V97.6981H169H204.5V124.112V124.612H205H249.5V159V159.5H250H277H277.5V159V82.5H352H352.5V82V6V5.5H352H169Z" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="classroom-1" x="277.5" y="82.5" width="75" height="69" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="elevator-2" x="168.5" y="97.5" width="36" height="27" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="stairs-2" x="86.5" y="32.5" width="44" height="92" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="bathroom-0" x="352.5" y="27.5" width="91" height="85" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="stairs-0" x="352.5" y="112.5" width="55" height="47" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="elevator-0" x="392.5" y="195.5" width="45" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="elevator-1" x="403.5" y="924.5" width="45" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="stairs-1" x="481.5" y="924.5" width="79" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="bathroom-1" x="560.5" y="924.5" width="54" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-1" x="488.5" y="5.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-2" x="528.5" y="5.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<path id="lab-0" d="M444 5.5H443.5V6V112V112.5H444H528H528.5V112V76V75.5H528H488.5V6V5.5H488H444Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+<path id="lab-2" d="M317 195.5H316.5V196V307V307.5H317H437H437.5V307V233V232.5H437H392.5V196V195.5H392H317Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+<path id="lab-1" d="M614 5.5H614.5V6V112V112.5H614H529H528.5V112V41V40.5H529H568.452V6V5.5H568.952H614Z" fill="#D9D9D9" fill-opacity="0.5" stroke="black"/>
+<rect id="office-3" x="488.5" y="40.5" width="40" height="35" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="classroom-2" x="478.5" y="112.5" width="110" height="44" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-3" x="316.5" y="307.5" width="121" height="74" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-4" x="316.5" y="381.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-5" x="316.5" y="456.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-6" x="316.5" y="531.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-7" x="316.5" y="604.5" width="121" height="76" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-8" x="316.5" y="680.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-9" x="316.5" y="753.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-10" x="316.5" y="828.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-11" x="493.5" y="306.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-12" x="493.5" y="381.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-13" x="493.5" y="456.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-14" x="493.5" y="531.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-15" x="493.5" y="604.5" width="121" height="76" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-16" x="493.5" y="680.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-17" x="493.5" y="753.5" width="121" height="75" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-18" x="493.5" y="828.5" width="121" height="73" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="lab-19" x="493.5" y="267.5" width="121" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-3_2" x="614.5" y="381.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-4" x="614.5" y="418.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-5" x="614.5" y="456.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-6" x="614.5" y="493.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-7" x="614.5" y="531.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-8" x="614.5" y="565.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-9" x="614.5" y="604.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-10" x="614.5" y="641.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-11" x="614.5" y="680.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-12" x="614.5" y="714.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-13" x="614.5" y="753.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-14" x="614.5" y="787.5" width="48" height="41" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-15" x="268.5" y="381.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-16" x="268.5" y="418.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-17" x="268.5" y="456.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-18" x="268.5" y="493.5" width="48" height="38" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-19" x="268.5" y="531.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-20" x="268.5" y="565.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-21" x="268.5" y="604.5" width="48" height="37" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-22" x="268.5" y="641.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-23" x="268.5" y="680.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-24" x="268.5" y="714.5" width="48" height="39" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-25" x="268.5" y="753.5" width="48" height="34" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+<rect id="office-26" x="268.5" y="787.5" width="48" height="41" fill="#D9D9D9" fill-opacity="0.6" stroke="black"/>
+</g>
+</svg>
